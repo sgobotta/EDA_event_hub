@@ -18,6 +18,7 @@ defmodule EventHub.Application do
       # {EventHub.Worker, arg},
       # Start to serve requests, typically the last entry
       # EventHubWeb.Endpoint
+      EventHub.Subscriptions.Producer
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
