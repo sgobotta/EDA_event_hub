@@ -17,6 +17,10 @@ defmodule EventHub.Accounts.UserNotifier do
     end
   end
 
+  def deliver_email_notification(notification) do
+    deliver(notification.to, notification.subject, notification.body)
+  end
+
   @doc """
   Deliver instructions to confirm account.
   """

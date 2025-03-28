@@ -6,6 +6,7 @@ defmodule EventHub.Subscriptions.Producer do
   def start_link(_opts) do
     Broadway.start_link(__MODULE__,
       name: SubscriptionsProducer,
+      context: EventHub.Notifications.Notification,
       producer: [
         module: {BroadwayRabbitMQ.Producer,
           queue: "project-dev-pending_subscriptions-v1",
@@ -32,10 +33,15 @@ defmodule EventHub.Subscriptions.Producer do
   end
 
   @impl true
-  def handle_message(_, message, _) do
+  def handle_message(_, message, context) do
     IO.inspect(message.data, label: "Received message!")
+    message =
+      message
+      |> Message.update_data(fn data -> data end)
+
+    apply(context, :handle_message, [message])
+
     message
-    |> Message.update_data(fn data -> {data, String.to_integer(data) * 2} end)
   end
 
   @impl true
